@@ -12,5 +12,5 @@ block content
             p.card-text= pet.description
             .text-right
                 a.card-link(href=`/pets/${pet._id}`) View #{pet.name}
-    + pages
+  +pages(pages, cur_page)
 

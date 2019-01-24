@@ -1,2 +1,15 @@
-mixin pages
-  p This is a great time!
+mixin pages(pages, cur_page)
+  nav(aria-label='Page navigation example')
+    ul.pagination
+      li.page-item
+        a.page-link(href='#') Previous
+      each val, index in pages
+        if (index == cur_page - 1)
+          li.page-item.active
+            a.page-link(href='#')= val
+        else
+          li.page-item
+            a.page-link(href='#')= val
+      li.page-item
+        a.page-link(href='#') Next
+
