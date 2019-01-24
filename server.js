@@ -3,12 +3,19 @@ if (!process.env.PORT) {
   process.env.NODE_ENV = "dev"
 }
 
+//Web App framework for Nodejs
 const express = require('express');
+//Utilites for working with files and directories
 const path = require('path');
+//Delivers favicons with extra fun features
 const favicon = require('serve-favicon');
+//http request logging middleware
 const logger = require('morgan');
+//Parse http headers for cookies
 const cookieParser = require('cookie-parser');
+//Parse request bodies
 const bodyParser = require('body-parser');
+// Use Patch, Put, and Delete methods 
 const methodOverride = require('method-override')
 
 const app = express();
