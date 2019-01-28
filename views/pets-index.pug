@@ -1,6 +1,8 @@
 extends layout
 include mixins/pages
+include mixins/search
 block content
+  +search
   .row
     each pet, index in pets
       .col-sm-4.justify-content-center

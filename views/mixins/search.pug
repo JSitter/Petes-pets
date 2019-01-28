@@ -1,0 +1,8 @@
+mixin search
+  .row.justify-content-center
+    .col-sm-6
+      form(action="/search", method="get")
+        .form-group
+          label Search Term
+          input.form-control(name="term")
+        button(type="submit").btn.btn-primary Search
