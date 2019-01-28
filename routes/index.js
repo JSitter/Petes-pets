@@ -3,7 +3,7 @@ const Pet = require('../models/pet');
 module.exports = (app) => {
 
 app.get('/', (req, res) => {
-  Pet.paginate({}, {limit:2}, (err, results) => {
+  Pet.paginate({}, {limit:10}, (err, results) => {
     pages = []
     for (i = 1; i <= results.pages; i++){
       pages.push(i)
@@ -13,7 +13,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/search', (req, res) => {
-  Pet.paginate({name:req.query.term}, {limit:3}, (err, results) => {
+  term = new RegExp(req.query.term, 'i')
+  Pet.paginate({name:term}, {limit:3}, (err, results) => {
     pages = []
     for (i = 1; i <= results.pages; i++){
       pages.push(i)
