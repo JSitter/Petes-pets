@@ -14,7 +14,11 @@ app.get('/', (req, res) => {
 
 app.get('/search', (req, res) => {
   term = new RegExp(req.query.term, 'i')
-  Pet.paginate({name:term}, {limit:3}, (err, results) => {
+  
+  Pet.paginate({$or:[
+    {'name': term},
+    {'species': term}
+  ]}, {limit:3}, (err, results) => {
     pages = []
     for (i = 1; i <= results.pages; i++){
       pages.push(i)
