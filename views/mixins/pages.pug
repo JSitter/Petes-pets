@@ -2,14 +2,14 @@ mixin pages(pages, cur_page)
   nav(aria-label='Page navigation example')
     ul.pagination
       li.page-item
-        a.page-link(href='#') Previous
+        a.page-link(href=`?page=${page - 1}`) Previous
       each val, index in pages
         if (index == cur_page - 1)
           li.page-item.active
-            a.page-link(href='#')= val
+            a.page-link(href=`?page=${index}`)= val
         else
           li.page-item
-            a.page-link(href='#')= val
+            a.page-link(href=`?page=${index}`)= val
       li.page-item
-        a.page-link(href='#') Next
+        a.page-link(href=`?page=${page + 1}`) Next
 
