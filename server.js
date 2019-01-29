@@ -19,7 +19,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override')
 
 const app = express();
-
+console.log(process.env.TEST);
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/petes-pets');
 
