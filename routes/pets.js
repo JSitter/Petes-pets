@@ -42,12 +42,12 @@ const client = new Upload(process.env.S3_BUCKET, {
 // PET ROUTES
 module.exports = (app) => {
 
-  // INDEX PET => index.js
+// INDEX PET => index.js
 
-  // NEW PET
-  app.get('/pets/new', (req, res) => {
-    res.render('pets-new');
-  });
+// NEW PET
+app.get('/pets/new', (req, res) => {
+  res.render('pets-new');
+});
 
 // CREATE PET
 app.post('/pets', upload.single('avatar'), (req, res, next) => {

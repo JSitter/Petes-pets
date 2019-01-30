@@ -12,19 +12,24 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/search', (req, res) => {
-  term = new RegExp(req.query.term, 'i')
-  const page = req.query.page || 1
-  Pet.paginate({$or:[
-    {'name': term},
-    {'species': term}
-  ]}, {page: page, limit:10}, (err, results) => {
-    pages = []
-    for (i = 1; i <= results.pages; i++){
-      pages.push(i)
-    }
-    res.render('pets-index', { pets: results.docs , pages: pages, cur_page: page });    
-  });
+// SEARCH
+app.get('/search', function (req, res) {
+  Pet
+      .find(
+          { $text : { $search : req.query.term } },
+          { score : { $meta: "textScore" } }
+      )
+      .sort({ score : { $meta : 'textScore' } })
+      .limit(20)
+      .exec(function(err, pets) {
+        if (err) { return res.status(400).send(err) }
+
+        if (req.header('Content-Type') == 'application/json') {
+          return res.json({ pets: pets });
+        } else {
+          return res.render('pets-index', { pets: pets, term: req.query.term });
+        }
+      });
 });
 
 }
