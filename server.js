@@ -23,6 +23,9 @@ console.log(process.env.TEST);
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/petes-pets');
 
+//Create locals for Stripe API
+app.locals.PUBLIC_STRIPE_API_KEY = process.env.PUBLIC_STRIPE_API_KEY
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
