@@ -4,6 +4,17 @@ const Pet = require('../models/pet');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const Upload = require('s3-uploader');
+const nodemailer = require('nodemailer');
+const mg = require('nodemailer-mailgun-transport');
+
+const auth = {
+  auth: {
+    api_key: process.env.MAILGUN_API_KEY,
+    domain: process.env.EMAIL_DOMAIN
+  }
+}
+
+const nodemailerMailgun = nodemailer.createTransport(mg(auth));
 
 const client = new Upload(process.env.S3_BUCKET, {
   aws: {
@@ -97,6 +108,8 @@ app.post('/pets', upload.single('avatar'), (req, res, next) => {
 
   // Purchase Pet
   app.post('/pets/:id/purchase', (req, res) => {
+
+
     console.log("Body:", req.body);
     // Set your secret key: remember to change this to your live secret key in production
     // See your keys here: https://dashboard.stripe.com/account/apikeys
@@ -111,6 +124,7 @@ app.post('/pets', upload.single('avatar'), (req, res, next) => {
     let petId = req.body.petId || req.params.id;
 
     Pet.findById(petId).exec((err, pet) => {
+      console.log("Finding pet")
       if(err) {
         console.log('Error: ' + err);
         res.redirect(`/pets/${req.params.id}`);
@@ -121,9 +135,36 @@ app.post('/pets', upload.single('avatar'), (req, res, next) => {
         description: `Purchased ${pet.name}, ${pet.species}`,
         source: token,
       }).then((chg) => {
-        res.redirect(`/pets/${req.params.id}`);
+        console.log("I'll give you money if this works...")
+        // SEND EMAIL
+        // Convert the amount back to dollars for ease in displaying in the template
+        const user = {
+          email: req.body.stripeEmail,
+          amount: chg.amount / 100,
+          petName: pet.name
+        };
+        // After we get the pet so we can grab it's name, then we send the email
+        nodemailerMailgun.sendMail({
+          from: 'no-reply@example.com',
+          to: user.email, // An array if you have multiple recipients.
+          subject: 'Pet Purchased!',
+          template: {
+            name: 'email.handlebars',
+            engine: 'handlebars',
+            context: user
+          }
+        }).then(info => {
+          console.log('Response: ' + info);
+          res.redirect(`/pets/${req.params.id}`);
+        }).catch(err => {
+          console.log('Error: ' + err);
+          res.redirect(`/pets/${req.params.id}`);
         });
-      })
+      });
+      
+      }).catch(err => {
+        console.log('Error: ' + err);
+      });
 
   });
 
