@@ -24,3 +24,6 @@ Fuzzy and full-text search on multiple criteria
 
 ### Responding to JSON
 Make your project into a full API
+
+### Add Hamburger menu animations
+Animated burgers was added to this repo for slickness.
